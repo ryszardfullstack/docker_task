@@ -1,0 +1,26 @@
+name: Build and push to dockerhub
+on: [push] 
+
+##Define the enviroment variables for the pipeline
+env:
+  DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  REPO_NAME_1: ryszardfullstack/docker_task:tagname
+jobs:
+  push-image-to-docker-hub: 
+    runs-on: ubuntu-latest 
+    steps:
+    - uses: actions/checkout@v2 
+    - name: docker login
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
+    - name: Get current date ##Incase you want to get the current date and make taht as a tag instead. 
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
+    - name: Build the Docker image 1
+      run: docker build . --file Dockerfile --tag $REPO_NAME_1:latest
+    - name: Build the Docker image 2
+      run: docker build ./proxy --file proxy/Dockerfile --tag $REPO_NAME_2:latest
+    - name: Docker Push 1
+      run: docker push $REPO_NAME_1:latest
+      uses: appleboy/ssh-action@master
