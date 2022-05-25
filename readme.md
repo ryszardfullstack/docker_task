@@ -24,7 +24,7 @@ In the report, please include the software code along with the necessary comment
 `sudo docker-compose up --build` to run and build the project in your machine, which will run in daemon mode
 
 The server side is writing in python and django.
-at first get access to docker contaier by `docker system exec -it <containername> bash` and then create a superuser with `python3 manage.py createsupeurser` and you can login there, there will be optoin to store your first name, last name, and every single logs.
+at first get access to docker contaier by `docker exec -it docker_task-master_web_1 bash` and then create a superuser with `python3 manage.py createsupeurser` and you can login there, there will be optoin to store your first name, last name, and every single logs.
 
 or you can check the log with `docker inspect` commands
 
