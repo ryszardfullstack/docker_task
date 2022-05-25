@@ -23,25 +23,42 @@ In the report, please include the software code along with the necessary comment
 ` sudo docker image ls` list docker iamge and check which image created when
 `sudo docker-compose up --build -d` to run and build the project in your machine, which will run in daemon mode
 
+The server side is writing in python and django.
+at first get access to docker contaier by `docker system exec -it <containername> bash` and then create a superuser with `python3 manage.py createsupeurser` and you can login there, there will be optoin to store your first name, last name, and every single logs.
+
+or you can check the log with `docker inspect` commands
+
+To check this webpage on your browser, please hit with your local ip addpress or machine ip address, in this case, we are shong localhost ipaddress.
+there is a home page of django `http://127.0.0.1:8000/` and to login to admin panel, go there `http://127.0.0.1:8000/admin`. You must create superuser to login to the admin panels
 
 
-2. 
+# 2. 
 Develop a Dockerfile file that will allow you to build an image of the container implementing the functionality described in point 1. The assessment will take into account the method of developing this file (selection of the base image, multi-stage image building, possible use of the scratch layer, optimization of the cache in the building process) . The Dockerfile should also contain information about the author of this file (again the first and last name of the student).
 
 In the report, please include the Dockerfile with the necessary comments.
 
+## solutions
+
+We have selected base image `python:3`
+Currently our dockerfile is below multip stage. to build multi-stage image, we can use `docker-compose.yaml` for seperate process, everything have to write inside `services` to put another stage of image build
+
+Also we can build image from scratch from any linux distro as you mentioned above like `ubuntu`, `centos` etcs. we can use our base image as this: https://hub.docker.com/_/ubuntu to build from scratch.
+
 ```
+# MAINTAINER 'Ryszard Roman' # it is depected
+# to set maintainer name, do like this: docker commit -a "Author Name"
 FROM python:3
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 WORKDIR /code
 COPY requirements.txt /code/
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt # installing dependencies
 COPY . /code/
 ```
 
 ```
 version: '3.9'
+
 
 services:
   web:
@@ -75,7 +92,7 @@ services:
 ```
 
 > C:  `sudo docker inspect <containerid/name>` to check all the network info and everything
-`docker history --no-trunc <Image ID>`
+`docker history --no-trunc <Image ID>` is to check how many layes of image and size
 
 # 4. 
 Build container images with the application developed in # 1, which will work on the following architectures: linux / arm / v7, linux / arm64 / v8 and linux / amd64. These images should be uploaded to your repository on DockerHub. The instructions used should be included in the report, together with the result of their operation and any comments.
